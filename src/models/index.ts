@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
-  givenAway: {
+  sold: {
     type: Number,
     default: 0
   },
@@ -161,8 +161,9 @@ export const updateItem = async (itemId: string, status: ItemStatus, sellerId: s
   console.log('status: ', status);
   if (status === 'taken') {
     const curItem = await Item.findByIdAndUpdate(itemId, { buyer: buyerId, status, count, seller: sellerId });
-    await User.findByIdAndUpdate(buyerId, { $addToSet: { takenItems: curItem?._id } });
-    await User.findByIdAndUpdate(sellerId, { $pull: { sellingItems: curItem?._id }, $inc: { selling: -count }});
+    await User.findByIdAndUpdate(buyerId, { $addToSet: { takenItems: curItem?._id, items: curItem?._id } });
+    // isnt pulling from items
+    await User.findByIdAndUpdate(sellerId, { $pull: { sellingItems: curItem?._id, items: curItem?._id }, $inc: { selling: -count }});
     updateCount(buyerId, 'taken', count);
     updateCount(sellerId, 'sold', count);
   } if (status === 'selling' ){
