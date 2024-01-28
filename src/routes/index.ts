@@ -25,7 +25,7 @@ router.post('/login', async (req, res) => {
   console.log(receivedData); 
   
   const user = await findUser(receivedData.email);
-  console.log(user);
+  console.log('user = ', user);
   res.send(user);
 });
 

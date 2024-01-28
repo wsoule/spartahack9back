@@ -95,8 +95,8 @@ export const findAllUsers = async () => {
   return await db.collection('users').find({}).toArray();
 };
 
-export const findUser = async (username: string) => {
-  return await User.find({ username: username }).populate('friends').populate('takenItems').populate('givenItems').populate('sellingItems').populate('items');
+export const findUser = async (email: string) => {
+  return await User.findOne({ email }).populate('friends').populate('takenItems').populate('givenItems').populate('sellingItems').populate('items');
 };
 
 export const createUser = async (email: string, username: string, location: string) => {
