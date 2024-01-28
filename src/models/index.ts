@@ -3,14 +3,15 @@ import { getDB } from '../db';
 import { count } from 'console';
 
 const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true
-  },
   username: {
     type: String,
     required: true,
     unique: true
+  },
+  email: {
+      type: String,
+      required: true,
+      unique: true
   },
   friends: [{
     type: mongoose.Schema.Types.ObjectId,
@@ -98,9 +99,9 @@ export const findUser = async (username: string) => {
   return await User.find({ username: username }).populate('friends').populate('takenItems').populate('givenItems').populate('sellingItems').populate('items');
 };
 
-export const createUser = async (name: string, username: string, location: string) => {
+export const createUser = async (email: string, username: string, location: string) => {
 
-  const newUser = new User({ name, username, location });
+  const newUser = new User({ email, username, location });
   return await newUser.save();
 }
 

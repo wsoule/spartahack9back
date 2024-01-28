@@ -13,11 +13,20 @@ router.get('/', async (req, res) => {
 
 router.post('/create-user', (req, res) => {
   const receivedData = req.body;
-  console.log(receivedData); // Log the received data to the console
+  console.log(receivedData); 
 
   // Handle the data (e.g., save to database)
-  createUser(receivedData.name, receivedData.username, receivedData.location);
+  createUser(receivedData.email, receivedData.username, receivedData.location);
   res.status(200).json({ message: 'Data received successfully' });
+});
+
+router.post('/login', async (req, res) => {
+  const receivedData = req.body;
+  console.log(receivedData); 
+  
+  const user = await findUser(receivedData.email);
+  console.log(user);
+  res.send(user);
 });
 
 router.get('/test', (req, res) => {
