@@ -6,14 +6,12 @@ const router: Router = Router();
 // Define your routes here
 router.get('/', async (req, res) => {
   const users = await findAllUsers();
-  console.log(users);
   res.send(users);
 });
 
 
 router.post('/create-user', (req, res) => {
   const receivedData = req.body;
-  console.log(receivedData); 
 
   // Handle the data (e.g., save to database)
   createUser(receivedData.email, receivedData.username, receivedData.location);
@@ -22,10 +20,8 @@ router.post('/create-user', (req, res) => {
 
 router.post('/login', async (req, res) => {
   const receivedData = req.body;
-  console.log(receivedData); 
   
   const user = await findUser(receivedData.email);
-  console.log('user = ', user);
   res.send(user);
 });
 
@@ -35,7 +31,6 @@ router.get('/test', (req, res) => {
 
 router.patch('/add-friend', (req, res) => {
   const receivedData = req.body;
-  console.log('update friend: ', receivedData); // Log the received data to the console
 
   addFriend(receivedData.id, receivedData.friendId);
   res.status(200).json({ message: 'Data received successfully' });
@@ -43,7 +38,6 @@ router.patch('/add-friend', (req, res) => {
 
 router.patch('/update-count', (req, res) => {
   const receivedData = req.body;
-  console.log('update countshit: ', receivedData); // Log the received data to the console
   // item needs to be 'recycled' | 'trash' | 'givenAway'
   updateCount(receivedData.id, receivedData.item, receivedData.count);
   res.status(200).json({ message: 'Data received successfully' });
@@ -51,13 +45,11 @@ router.patch('/update-count', (req, res) => {
 
 router.get('/user/:username', async (req, res) => {
   const user = await findUser(req.params.username);
-  console.log(user);
   res.send(user);
 });
 
 router.patch('/update-badges', (req, res) => {
   const receivedData = req.body;
-  console.log('update badges: ', receivedData);
 
   updateBadges(receivedData.id, receivedData.badge);
   res.status(200).json({ message: 'Data received successfully' });
@@ -70,25 +62,22 @@ router.get('/items', async (req, res) => {
 
 router.post('/create-item', (req, res) => {
   const receivedData = req.body;
-  console.log('create item', receivedData);
 
-  createItem(receivedData.name, receivedData.imageUrl, receivedData.status, receivedData.count ?? 1, receivedData.userId);
+  createItem(receivedData.name, receivedData.imageUrl, receivedData.status, receivedData.count ?? 1, receivedData.userId, receivedData.description, receivedData.tags);
   res.status(200).json({ message: 'Data received successfully' });
 });
 
 router.patch('/take-item', (req, res) => {
   const receivedData = req.body;
-  console.log('take item', receivedData);
 
   updateItem(receivedData.id, 'taken', receivedData.count, receivedData.userId, receivedData.buyerId);
   res.status(200).json({ message: 'Data received successfully' });
 });
 
-router.patch('/update-item', (req, res) => {
+router.patch('/update-item/:id', (req, res) => {
   const receivedData = req.body;
-  console.log('update item', receivedData);
 
-  updateItem(receivedData.id, receivedData.status, receivedData.userId, receivedData.count, receivedData?.buyerId);
+  updateItem(req.params.id, receivedData.status, receivedData.userId, receivedData.count, receivedData?.buyerId);
   res.status(200).json({ message: 'Data received successfully' });
 });
 

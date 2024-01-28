@@ -82,9 +82,15 @@ const itemSchema = new mongoose.Schema({
     type: String,
     default: 'trash'
   },
-  image: {
+  imageUrl: {
     type: String
-  }
+  },
+  description: {
+    type: String
+  },
+  tags: [{
+    type: String
+  }],
 });
 
 export const User = mongoose.model('User', userSchema);
@@ -101,7 +107,7 @@ export const findUser = async (email: string) => {
 
 export const createUser = async (email: string, username: string, location: string) => {
 
-  const newUser = new User({ email, username, location });
+  const newUser = new User({ email, username, location, badges: ['https://imgs.search.brave.com/Nn4jJebU1ftuavSsu6MdLJBQmDYO23TNlZ6CL5g-BGA/rs:fit:500:0:0/g:ce/aHR0cHM6Ly93d3cu/cG5nbWFydC5jb20v/ZmlsZXMvMTQvRGlh/bW9uZC1CYWRnZS1U/cmFuc3BhcmVudC1Q/TkcucG5n']});
   return await newUser.save();
 }
 
@@ -117,9 +123,7 @@ export const addFriend = async (id: string, friendId: string) => {
 export const updateCount = async (id: string, item: ItemStatus, count: number) => {
   try {
     const points = (item === 'selling') ? count * 20 : (item === 'taken') ? count * 15 : (item === 'recycled') ? count * 10 : count * 5;
-    console.log('points: ', points);
     const update = { $inc: { [item]: count, points: points} };
-    console.log('update: ', update);
     await User.findByIdAndUpdate(id, update);
 
 
@@ -136,8 +140,9 @@ export const updateBadges = async (id: string, badge: string) => {
   }
 }
 
-export const createItem = async (name: string, imageUrl: string, status: string, count: number, userId: string) => {
-  const newItem = new Item({ name, seller: userId, status, count, imageUrl});
+export const createItem = async (name: string, imageUrl: string, status: string, count: number, userId: string, description: string, tags: string[]) => {
+  const newItem = new Item({ name, seller: userId, status, count, imageUrl, description, tags });
+  console.log('status: ', status);
   switch (status) {
     case 'recycled':
       await updateCount(userId, 'recycled', count);
