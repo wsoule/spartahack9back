@@ -20,7 +20,7 @@ router.post('/create-user', (req, res) => {
 
 router.post('/login', async (req, res) => {
   const receivedData = req.body;
-  
+  console.log('logged in');
   const user = await findUser(receivedData.email);
   res.send(user);
 });
